@@ -1,3 +1,4 @@
+yaml
 name: Lint JSON files
 
 on:
@@ -28,7 +29,8 @@ jobs:
       
       - name: Find and lint JSON files
         run: |
-          find . -name "*.json" -not -path "./node_modules/*" -not -path "./.git/*" | while read file; do
+          find . -name "*.json" -not -path "./node_modules/*" -not -path "./.git/*" | while read file;
+          do
             echo "Checking $file"
             jsonlint -q "$file"
             if [ $? -eq 0 ]; then
