@@ -1,42 +1,16 @@
-yaml
-name: Lint JSON files
+name: Lint JSON
 
-on:
-  push:
-    branches: [ main, master ]
-    paths:
-      - '**.json'
-  pull_request:
-    branches: [ main, master ]
-    paths:
-      - '**.json'
+on: [push, pull_request]
 
 jobs:
-  json-lint:
+  lint:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      
+      - uses: actions/checkout@v4
       - name: Install jsonlint
         run: npm install -g jsonlint
-      
-      - name: Find and lint JSON files
+      - name: Lint JSON files
         run: |
-          find . -name "*.json" -not -path "./node_modules/*" -not -path "./.git/*" | while read file; do
-            echo "Checking $file"
+          for file in $(find . -name "*.json"); do
             jsonlint -q "$file"
-            if [ $? -eq 0 ]; then
-              echo "✅ $file is valid"
-            else
-              echo "❌ $file is invalid"
-              exit 1
-            fi
           done
-          echo "🎉 All JSON files are valid!"
